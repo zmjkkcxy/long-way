@@ -181,6 +181,39 @@
     transform: scale(1.07);
   }
 
+  .copyBtn {
+    position: fixed; right: 92px; bottom: calc(4vh + 22px); z-index: 62;
+    width: 48px; height: 48px;
+    border: 1px solid rgba(255,252,243,.28);
+    border-radius: 999px;
+    background: rgba(10,18,26,.62);
+    backdrop-filter: blur(10px);
+    color: rgba(255,252,243,.95);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 22px rgba(0,0,0,.38);
+    transition: background .25s ease, transform .25s ease, border-color .25s ease;
+  }
+  .copyBtn:hover {
+    background: rgba(255,252,243,.16);
+    border-color: rgba(255,252,243,.55);
+    transform: scale(1.07);
+  }
+  .copyBtn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(4vh + 86px);
+    transform: translateX(-50%) translateY(6px);
+    padding: 9px 20px; border-radius: 999px;
+    background: rgba(10,18,26,.86);
+    border: 1px solid rgba(255,252,243,.18);
+    color: rgba(255,252,243,.92);
+    font-family: "Noto Serif SC", serif; font-size: .78rem; letter-spacing: .2em;
+    z-index: 64; pointer-events: none;
+    opacity: 0; transition: opacity .35s ease, transform .35s ease;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
   .hint {
     position: fixed; left: 50%; bottom: calc(4vh + 26px); transform: translateX(-50%);
     font-family: "Noto Serif SC", serif; font-size: .72rem; letter-spacing: .4em;
@@ -277,6 +310,13 @@
 </div>
 
 <button class="playBtn" id="playBtn" aria-label="播放 / 暂停">▶</button>
+<button class="copyBtn" id="copyBtn" aria-label="复制链接">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1" />
+    <path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1" />
+  </svg>
+</button>
+<div class="toast" id="toast">链接已复制</div>
 <div class="hint" id="hint">向 下 滚 动</div>
 
 <script>
@@ -295,6 +335,8 @@
   const rail    = document.getElementById('rail');
   const railFill= document.getElementById('railFill');
   const playBtn = document.getElementById('playBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const toast   = document.getElementById('toast');
   const hint    = document.getElementById('hint');
   const barTop  = document.getElementById('barTop');
   const barBottom = document.getElementById('barBottom');
@@ -401,6 +443,33 @@
     auto = false;
     playBtn.textContent = current >= 0.999 ? '↻' : '▶';
   }
+
+  // ---- copy link ----
+  let toastTimer = 0;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  copyBtn.addEventListener('click', async () => {
+    const url = location.href.split('#')[0];
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast('链接已复制');
+    } catch (_) {
+      // clipboard API needs https + permission; fall back to a selectable field
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.cssText = 'position:fixed;top:-999px;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(ok ? '链接已复制' : '复制失败，请手动复制地址栏');
+    }
+  });
 
   playBtn.addEventListener('click', () => {
     if (auto) return stopAuto();
