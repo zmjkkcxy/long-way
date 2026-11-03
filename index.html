@@ -9,7 +9,7 @@
 <!-- link preview — absolute URLs only; relative og:image is ignored by every client -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="THE LONG WAY" />
-<meta property="og:description" content="有些东西，建了几百年，还没建完。" />
+<meta property="og:description" content="它有多高？" />
 <meta property="og:image" content="https://zmjkkcxy.github.io/long-way/og-card.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -19,7 +19,7 @@
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="THE LONG WAY" />
-<meta name="twitter:description" content="有些东西，建了几百年，还没建完。" />
+<meta name="twitter:description" content="它有多高？" />
 <meta name="twitter:image" content="https://zmjkkcxy.github.io/long-way/og-card.jpg" />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1218'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%23ffe9b8' font-family='serif'%3EL%3C/text%3E%3C/svg%3E" />
@@ -35,14 +35,14 @@
     overflow-x: clip;
   }
 
-  .journey { position: relative; height: 900vh; }
+  .journey { position: relative; height: 1200vh; }
 
   .stage {
     position: sticky; top: 0;
     height: 100vh;
     height: 100svh;
     overflow: hidden;
-    background: #8fb6cd;
+    background: #0a1016;
     perspective: 1200px;
     perspective-origin: 50% 58%;
     isolation: isolate;
@@ -55,8 +55,6 @@
   .band {
     position: absolute; left: 0; top: 0;
     width: 100%; height: auto;
-    /* on narrow screens width:100% yields an image shorter than the viewport —
-       min-height + cover guarantees the band always fills the stage vertically */
     min-height: 100%;
     object-fit: cover;
     object-position: 50% 0%;
@@ -66,11 +64,41 @@
     user-select: none; -webkit-user-drag: none; pointer-events: none;
   }
 
+  /* act 0 is a flat 2D pan — no depth slices, no 3D */
+  .flat {
+    position: absolute; left: 0; top: 0;
+    width: 100%; height: auto;
+    object-position: 50% 0%;
+    backface-visibility: hidden;
+    will-change: transform;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+  }
+
+  /* ---------- atmosphere ---------- */
+  .mist {
+    position: absolute; inset: 0; z-index: 18; pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(120% 55% at 50% 92%, rgba(255,244,224,.42) 0%, rgba(255,240,215,.16) 38%, transparent 70%),
+      radial-gradient(90% 40% at 18% 78%, rgba(226,236,245,.20) 0%, transparent 62%);
+    mix-blend-mode: screen;
+    filter: blur(8px);
+    will-change: opacity, transform;
+  }
+
+  .shaft {
+    position: absolute; inset: 0; z-index: 19; pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at 24% 6%, rgba(255,238,196,.30) 0%, rgba(255,234,180,.10) 26%, transparent 52%);
+    mix-blend-mode: screen;
+    will-change: opacity;
+  }
+
   .vignette {
     position: absolute; inset: 0; z-index: 20; pointer-events: none;
     background:
-      radial-gradient(115% 78% at 50% 12%, transparent 42%, rgba(6,16,26,.44) 100%),
-      linear-gradient(180deg, rgba(6,18,28,.46) 0%, transparent 24%, transparent 74%, rgba(6,18,28,.56) 100%);
+      radial-gradient(120% 82% at 50% 42%, transparent 26%, rgba(4,10,16,.72) 100%),
+      linear-gradient(180deg, rgba(4,10,16,.34) 0%, transparent 22%, transparent 76%, rgba(4,10,16,.46) 100%);
   }
 
   .flash {
@@ -81,14 +109,20 @@
     mix-blend-mode: screen;
   }
 
-  /* the darkness underneath the arch — the cut hides inside it */
   .veil {
     position: absolute; inset: 0; z-index: 25;
     pointer-events: none; opacity: 0;
     background: #08101a;
   }
 
-  /* letterbox — cheap cinema */
+  /* static film grain — never animated */
+  .grain {
+    position: absolute; inset: -50%; z-index: 26; pointer-events: none;
+    opacity: .05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
   .bar {
     position: fixed; left: 0; right: 0; height: 4vh;
     background: #060b11; z-index: 55; pointer-events: none;
@@ -110,7 +144,7 @@
   }
   .copy h1 {
     font-family: "Cormorant Garamond", serif; font-weight: 500;
-    font-size: clamp(2.6rem, 12vw, 11rem); line-height: .82; letter-spacing: .06em;
+    font-size: clamp(2.4rem, 10vw, 9rem); line-height: .86; letter-spacing: .08em;
     text-shadow: 0 10px 60px rgba(20,55,90,.85), 0 2px 5px rgba(30,70,100,.6);
   }
   .copy h2 {
@@ -126,11 +160,17 @@
     text-shadow: 0 2px 18px rgba(6,30,55,.98);
   }
 
+  .c0 { bottom: 13vh; }
+  .c0 .word {
+    font-family: "Noto Serif SC", serif; font-weight: 300;
+    font-size: clamp(1rem, 2.4vw, 1.9rem);
+    letter-spacing: 1em; text-indent: 1em;
+    color: rgba(255,250,240,.9);
+    text-shadow: 0 4px 30px rgba(6,20,40,.95);
+  }
+
   .c1 { top: 8vh; }
-  .c2 { top: 50%; transform: translateY(-50%); }
-  .c3 { top: 50%; transform: translateY(-50%); }
-  .c4 { top: 50%; transform: translateY(-50%); }
-  .c5 { top: 50%; transform: translateY(-50%); }
+  .c2, .c3, .c4, .c5 { top: 50%; transform: translateY(-50%); }
   .copy .name { color: #ffe9b8; letter-spacing: .12em; }
   .copy .sign {
     margin-top: 2em;
@@ -141,10 +181,8 @@
     color: rgba(255,242,214,.72);
     text-shadow: 0 2px 16px rgba(6,30,55,.9);
   }
-  /* the finale arrives in beats, so each line owns its own reveal */
   #c5a, #c5b, #c5c { opacity: 0; will-change: opacity, transform; }
 
-  /* progress rail, now a scrubber */
   .rail {
     position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
     width: 2px; height: 160px; background: rgba(255,252,243,.16);
@@ -181,39 +219,6 @@
     transform: scale(1.07);
   }
 
-  .copyBtn {
-    position: fixed; right: 92px; bottom: calc(4vh + 22px); z-index: 62;
-    width: 48px; height: 48px;
-    border: 1px solid rgba(255,252,243,.28);
-    border-radius: 999px;
-    background: rgba(10,18,26,.62);
-    backdrop-filter: blur(10px);
-    color: rgba(255,252,243,.95);
-    display: inline-flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 6px 22px rgba(0,0,0,.38);
-    transition: background .25s ease, transform .25s ease, border-color .25s ease;
-  }
-  .copyBtn:hover {
-    background: rgba(255,252,243,.16);
-    border-color: rgba(255,252,243,.55);
-    transform: scale(1.07);
-  }
-  .copyBtn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.6; }
-
-  .toast {
-    position: fixed; left: 50%; bottom: calc(4vh + 86px);
-    transform: translateX(-50%) translateY(6px);
-    padding: 9px 20px; border-radius: 999px;
-    background: rgba(10,18,26,.86);
-    border: 1px solid rgba(255,252,243,.18);
-    color: rgba(255,252,243,.92);
-    font-family: "Noto Serif SC", serif; font-size: .78rem; letter-spacing: .2em;
-    z-index: 64; pointer-events: none;
-    opacity: 0; transition: opacity .35s ease, transform .35s ease;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
   .hint {
     position: fixed; left: 50%; bottom: calc(4vh + 26px); transform: translateX(-50%);
     font-family: "Noto Serif SC", serif; font-size: .72rem; letter-spacing: .4em;
@@ -228,6 +233,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .hint { animation: none; }
+    .mist { filter: none; }
   }
   @media (max-height: 600px) { .bar { height: 2.5vh; } }
 </style>
@@ -238,38 +244,54 @@
   <div class="stage" id="stage">
     <div class="world" id="world">
 
-      <div class="scene scene-a" id="sceneA">
-        <img class="band a" src="assets/griffin/band-0.webp" data-z="-1040" alt="" decoding="async" />
-        <img class="band a" src="assets/griffin/band-1.webp" data-z="-760"  alt="" decoding="async" />
-        <img class="band a" src="assets/griffin/band-2.webp" data-z="-500"  alt="" decoding="async" />
-        <img class="band a" src="assets/griffin/band-3.webp" data-z="-260"  alt="" decoding="async" />
-        <img class="band a" src="assets/griffin/band-4.webp" data-z="-40"   alt="" fetchpriority="high" />
+      <!-- ACT 0 — the colossus, a flat 2D pan (no depth slices) -->
+      <div class="scene" id="scene0">
+        <img class="flat" id="flat0" src="assets/colossus/band-0.webp"
+             alt="" fetchpriority="high" />
       </div>
 
-      <div class="scene scene-b" id="sceneB">
-        <img class="band b" data-src="assets/sinkhole/band-0.webp" data-z="-1040" alt="" decoding="async" />
-        <img class="band b" data-src="assets/sinkhole/band-1.webp" data-z="-760"  alt="" decoding="async" />
-        <img class="band b" data-src="assets/sinkhole/band-2.webp" data-z="-500"  alt="" decoding="async" />
-        <img class="band b" data-src="assets/sinkhole/band-3.webp" data-z="-260"  alt="" decoding="async" />
-        <img class="band b" data-src="assets/sinkhole/band-4.webp" data-z="-40"   alt="" decoding="async" />
+      <!-- ACT 1 — the griffin gate -->
+      <div class="scene" id="scene1">
+        <img class="band" data-src="assets/griffin/band-0.webp" data-z="-1040" alt="" decoding="async" />
+        <img class="band" data-src="assets/griffin/band-1.webp" data-z="-760"  alt="" decoding="async" />
+        <img class="band" data-src="assets/griffin/band-2.webp" data-z="-500"  alt="" decoding="async" />
+        <img class="band" data-src="assets/griffin/band-3.webp" data-z="-260"  alt="" decoding="async" />
+        <img class="band" data-src="assets/griffin/band-4.webp" data-z="-40"   alt="" decoding="async" />
       </div>
 
-      <div class="scene scene-c" id="sceneC">
-        <img class="band c" data-src="assets/shrine/band-0.webp" data-z="-1040" alt="" decoding="async" />
-        <img class="band c" data-src="assets/shrine/band-1.webp" data-z="-760"  alt="" decoding="async" />
-        <img class="band c" data-src="assets/shrine/band-2.webp" data-z="-500"  alt="" decoding="async" />
-        <img class="band c" data-src="assets/shrine/band-3.webp" data-z="-260"  alt="" decoding="async" />
-        <img class="band c" data-src="assets/shrine/band-4.webp" data-z="-40"   alt="" decoding="async" />
+      <!-- ACT 2 — the sinkhole town -->
+      <div class="scene" id="scene2">
+        <img class="band" data-src="assets/sinkhole/band-0.webp" data-z="-1040" alt="" decoding="async" />
+        <img class="band" data-src="assets/sinkhole/band-1.webp" data-z="-760"  alt="" decoding="async" />
+        <img class="band" data-src="assets/sinkhole/band-2.webp" data-z="-500"  alt="" decoding="async" />
+        <img class="band" data-src="assets/sinkhole/band-3.webp" data-z="-260"  alt="" decoding="async" />
+        <img class="band" data-src="assets/sinkhole/band-4.webp" data-z="-40"   alt="" decoding="async" />
+      </div>
+
+      <!-- ACT 3 — the stonefall city -->
+      <div class="scene" id="scene3">
+        <img class="band" data-src="assets/shrine/band-0.webp" data-z="-1040" alt="" decoding="async" />
+        <img class="band" data-src="assets/shrine/band-1.webp" data-z="-760"  alt="" decoding="async" />
+        <img class="band" data-src="assets/shrine/band-2.webp" data-z="-500"  alt="" decoding="async" />
+        <img class="band" data-src="assets/shrine/band-3.webp" data-z="-260"  alt="" decoding="async" />
+        <img class="band" data-src="assets/shrine/band-4.webp" data-z="-40"   alt="" decoding="async" />
       </div>
 
     </div>
 
+    <div class="mist" id="mist"></div>
+    <div class="shaft" id="shaft"></div>
     <div class="flash" id="flash"></div>
     <div class="veil" id="veil"></div>
     <div class="vignette" id="vignette"></div>
+    <div class="grain"></div>
+
+    <div class="copy c0" id="c0">
+      <div class="word">仰 望</div>
+    </div>
 
     <div class="copy c1" id="c1">
-      <div class="kicker">一 · 门</div>
+      <div class="kicker">门</div>
       <h1>THE LONG WAY</h1>
     </div>
 
@@ -279,13 +301,11 @@
     </div>
 
     <div class="copy c3" id="c3">
-      <div class="kicker">二 · 城</div>
       <h2>城一层压着一层，<br />压进地底。</h2>
       <p>住得高的人，听不见下面的声音。</p>
     </div>
 
     <div class="copy c4" id="c4">
-      <div class="kicker">三 · 尽头</div>
       <h2>河走到这里就不走了，<br />石头替它站着。</h2>
       <p>城长在石头上，像一句没说完的话。</p>
     </div>
@@ -305,41 +325,37 @@
 <div class="rail" id="rail" role="slider" tabindex="0" aria-label="滚动进度"
      aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
   <i id="railFill"></i>
-  <b style="top:42%"></b>
-  <b style="top:74%"></b>
+  <b style="top:22%"></b>
+  <b style="top:52%"></b>
+  <b style="top:80%"></b>
 </div>
 
 <button class="playBtn" id="playBtn" aria-label="播放 / 暂停">▶</button>
-<button class="copyBtn" id="copyBtn" aria-label="复制链接">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1" />
-    <path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1" />
-  </svg>
-</button>
-<div class="toast" id="toast">链接已复制</div>
 <div class="hint" id="hint">向 下 滚 动</div>
 
 <script>
 (() => {
-  // this page owns its own progress — never let the browser restore a scroll position
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
   const journey = document.getElementById('journey');
   const world   = document.getElementById('world');
-  const sceneA  = document.getElementById('sceneA');
-  const sceneB  = document.getElementById('sceneB');
-  const sceneC  = document.getElementById('sceneC');
+  const scene0  = document.getElementById('scene0');
+  const scene1  = document.getElementById('scene1');
+  const scene2  = document.getElementById('scene2');
+  const scene3  = document.getElementById('scene3');
+  const flat0   = document.getElementById('flat0');
+  const mist    = document.getElementById('mist');
+  const shaft   = document.getElementById('shaft');
   const flash   = document.getElementById('flash');
   const veil    = document.getElementById('veil');
   const vignette= document.getElementById('vignette');
   const rail    = document.getElementById('rail');
   const railFill= document.getElementById('railFill');
   const playBtn = document.getElementById('playBtn');
-  const copyBtn = document.getElementById('copyBtn');
-  const toast   = document.getElementById('toast');
   const hint    = document.getElementById('hint');
   const barTop  = document.getElementById('barTop');
   const barBottom = document.getElementById('barBottom');
+  const c0 = document.getElementById('c0');
   const c1 = document.getElementById('c1');
   const c2 = document.getElementById('c2');
   const c3 = document.getElementById('c3');
@@ -349,13 +365,13 @@
   const c5b = document.getElementById('c5b');
   const c5c = document.getElementById('c5c');
 
-  const bandsA = [...sceneA.querySelectorAll('.band')];
-  const bandsB = [...sceneB.querySelectorAll('.band')];
-  const bandsC = [...sceneC.querySelectorAll('.band')];
+  const bands1 = [...scene1.querySelectorAll('.band')];
+  const bands2 = [...scene2.querySelectorAll('.band')];
+  const bands3 = [...scene3.querySelectorAll('.band')];
 
-  const PERSPECTIVE = 1200;
   const CAM = 1150;
-  const SWITCH = 0.50;
+  const S1 = 0.22, S2 = 0.52, S3 = 0.80;
+  const SWITCH = S2;
 
   let total = 0, target = 0, current = 0, raf = null, finaleT0 = 0;
   let preloaded = false;
@@ -368,17 +384,13 @@
     return x * x * (3 - 2 * x);
   };
 
-  const compOf = () => 1;
-
-  /* ---------------- measurement (cached — getBoundingClientRect every frame forces layout) ---------------- */
   function measure() {
     total = Math.max(1, journey.offsetHeight - window.innerHeight);
   }
   measure();
 
-  /* ---------------- layering ---------------- */
-  function flyScene(bands, localP, globalP, fadeStart, fadeOut, camTravel = CAM) {
-    const cam = localP * camTravel;
+  function flyScene(bands, localP, globalP, fadeStart, fadeOut) {
+    const cam = localP * CAM;
     for (const b of bands) {
       const z0 = parseFloat(b.dataset.z);
       const z = z0 + cam;
@@ -395,7 +407,7 @@
         globalP
       ) * (1 - fadeOut);
 
-      b.style.transform = `translate3d(0, 0, ${z.toFixed(1)}px) scale(${compOf().toFixed(4)})`;
+      b.style.transform = `translate3d(0, 0, ${z.toFixed(1)}px)`;
       if (blur > 0.05) {
         b.style.filter = `blur(${blur.toFixed(2)}px) brightness(${dim.toFixed(3)})`;
       } else if (b.style.filter) {
@@ -405,12 +417,9 @@
     }
   }
 
-  /* ---------------- autoplay : drives the scrollbar, never a hidden camera ---------------- */
-  const WP = [[0, 0], [0.42, 8000], [0.74, 17000], [1, 25000]];
-  // scrollTo() dispatches its scroll event asynchronously, so a plain boolean is
-  // already false by the time the handler runs. Time alone is not enough either:
-  // on throttled devices the event can arrive well after the window. Match on the
-  // exact Y we asked for — that identity holds no matter how late the event lands.
+  /* ---------------- autoplay ---------------- */
+  const WP = [[0, 0], [0.22, 5000], [0.52, 12500], [0.80, 19000], [1, 25000]];
+  const AUTO_MS = 25000;
   const SCROLL_GRACE_MS = 150;
   let auto = false, apTime = 0, lastT = 0, ignoreScrollUntil = 0, autoTargetY = -1;
 
@@ -423,15 +432,11 @@
 
   function startAuto() {
     if (reduceMotion.matches) {
-      // reduced motion: never autoplay, but the button must not be a silent
-      // no-op — take the user back to the top so the journey reads from the start.
       if (window.scrollY > 4) window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     auto = true;
-    // use the REAL scroll position, not the eased `current` — `current` lags and
-    // would start the timeline wherever the lerp happened to be
-    apTime = clamp(window.scrollY / total) * 25000;
+    apTime = clamp(window.scrollY / total) * AUTO_MS;
     lastT = performance.now();
     playBtn.textContent = '❚❚';
     hint.style.opacity = '0';
@@ -444,37 +449,8 @@
     playBtn.textContent = current >= 0.999 ? '↻' : '▶';
   }
 
-  // ---- copy link ----
-  let toastTimer = 0;
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-  }
-
-  copyBtn.addEventListener('click', async () => {
-    const url = location.href.split('#')[0];
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast('链接已复制');
-    } catch (_) {
-      // clipboard API needs https + permission; fall back to a selectable field
-      const ta = document.createElement('textarea');
-      ta.value = url;
-      ta.style.cssText = 'position:fixed;top:-999px;opacity:0';
-      document.body.appendChild(ta);
-      ta.select();
-      const ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast(ok ? '链接已复制' : '复制失败，请手动复制地址栏');
-    }
-  });
-
   playBtn.addEventListener('click', () => {
     if (auto) return stopAuto();
-    // the scrollbar is the source of truth — `target` is already 1 the frame
-    // autoplay finishes, whereas eased `current` lags a few frames
     if (target >= 0.999) {
       window.scrollTo({ top: 0, behavior: 'instant' });
       current = 0;
@@ -491,10 +467,9 @@
     else if (['ArrowDown','ArrowUp','PageDown','PageUp','Home','End'].includes(e.key)) stopAuto();
     else if (e.key === '1') stopAuto(), window.scrollTo({ top: 0, behavior: 'smooth' });
     else if (e.key === '2') stopAuto(), window.scrollTo({ top: total * SWITCH, behavior: 'smooth' });
+    else if (e.key === '3') stopAuto(), window.scrollTo({ top: total * S3, behavior: 'smooth' });
   });
   window.addEventListener('scroll', () => {
-    // our own autoplay step lands exactly on autoTargetY — ignore it however late
-    // the event arrives (throttled rAF can delay it past any fixed time window)
     if (auto && Math.abs(window.scrollY - autoTargetY) <= 2) return;
     if (performance.now() < ignoreScrollUntil) return;
     stopAuto();
@@ -539,81 +514,98 @@
       if (Math.abs(current - target) <= 0.0003) current = target;
     }
 
-    /* lazy-load scene B just before it is needed, while it is still invisible */
-    if (!preloaded && current > 0.25) {
+    if (!preloaded && current > 0.12) {
       preloaded = true;
-      bandsB.forEach((b) => { if (b.dataset.src) b.src = b.dataset.src; });
-      bandsC.forEach((b) => { if (b.dataset.src) b.src = b.dataset.src; });
+      [...bands1, ...bands2, ...bands3].forEach((b) => {
+        if (b.dataset.src) b.src = b.dataset.src;
+      });
     }
 
     const p = current;
 
-    // ---- three acts, two seams ----
-    const S1 = 0.42, S2 = 0.74;
+    /* ---------- ACT 0 : bottom→top pan, like raising your eyes ---------- */
+    {
+      const pull = smoothstep(0, 1, clamp(p / S1));
+      const s = 1.32 - 0.32 * pull;
+      const bandH = flat0.offsetHeight || 1;
+      const V = window.innerHeight;
+      const T = (V - s * bandH) * (1 - pull);
+      flat0.style.transform = `translate3d(0, ${T.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
+      scene0.style.opacity = (p < S1 + 0.02 ? 1 : 0).toFixed(3);
+      scene0.style.visibility = p > S1 + 0.04 ? 'hidden' : 'visible';
 
-    // A — camera freezes early so the bridge bands stay alive for the reveal
-    flyScene(bandsA, 0.72 * clamp(p / 0.30), p, 0.28, 1);
+      mist.style.opacity = (0.85 - 0.45 * pull).toFixed(3);
+      mist.style.transform = `translate3d(0, ${(-16 * pull).toFixed(1)}px, 0)`;
+      shaft.style.opacity = (0.55 + 0.35 * pull).toFixed(3);
+    }
 
-    // B — rides A's frozen depth while hidden, then advances inside its own window
-    const pB = p < S1
-      ? 0.72 * clamp(p / 0.30)
-      : clamp(0.72 + (p - S1) / (S2 - S1) * 0.28);
-    flyScene(bandsB, pB, p, 2, 0);
+    /* ---------- ACT 1 / 2 / 3 ---------- */
+    const pA1 = p < 0.30 ? 0.72 : clamp(0.72 + 0.28 * (p - 0.30) / 0.22);
+    flyScene(bands1, pA1, p, 0.44, 1);
 
-    // C — only moves after the second seam
-    flyScene(bandsC, 0.72 * clamp((p - S2) / (1 - S2)), p, 2, 0);
+    const pA2 = 0.72 * clamp((p - 0.58) / 0.22);
+    flyScene(bands2, pA2, p, 2, 0);
 
-    const isA = p < S1, isB = p >= S1 && p < S2, isC = p >= S2;
-    sceneA.style.opacity = isA ? '1' : '0';
-    sceneB.style.opacity = isB ? '1' : '0';
-    sceneC.style.opacity = isC ? '1' : '0';
+    const pA3 = 0.72 * clamp((p - 0.80) / 0.20);
+    flyScene(bands3, pA3, p, 2, 0);
 
-    // keep off-screen scenes out of compositing (visibility, never display)
-    sceneA.style.visibility = p > S1 + 0.02 ? 'hidden' : 'visible';
-    sceneB.style.visibility = (p < S1 - 0.02 || p > S2 + 0.02) ? 'hidden' : 'visible';
-    sceneC.style.visibility = p < S2 - 0.02 ? 'hidden' : 'visible';
+    const is1 = p >= S1 && p < S2, is2 = p >= S2 && p < S3, is3 = p >= S3;
+    scene1.style.opacity = is1 ? '1' : '0';
+    scene2.style.opacity = is2 ? '1' : '0';
+    scene3.style.opacity = is3 ? '1' : '0';
 
-    // the incoming act resolves out of a slight blur across its seam
-    const blurB = 3 * (1 - smoothstep(S1 - 0.040, S1, p));
-    const blurC = 3 * (1 - smoothstep(S2 - 0.040, S2, p));
-    sceneB.style.filter = blurB > 0.1 ? `blur(${blurB.toFixed(2)}px)` : '';
-    sceneC.style.filter = blurC > 0.1 ? `blur(${blurC.toFixed(2)}px)` : '';
+    scene1.style.visibility = (p < S1 - 0.02 || p > S2 + 0.02) ? 'hidden' : 'visible';
+    scene2.style.visibility = (p < S2 - 0.02 || p > S3 + 0.02) ? 'hidden' : 'visible';
+    scene3.style.visibility = p < S3 - 0.02 ? 'hidden' : 'visible';
 
-    // both cuts hide inside shadow — darken into the arch, rise out the other side
+    const blur1 = 3 * (1 - smoothstep(S1 - 0.040, S1, p));
+    const blur2 = 3 * (1 - smoothstep(S2 - 0.040, S2, p));
+    const blur3 = 3 * (1 - smoothstep(S3 - 0.040, S3, p));
+    scene1.style.filter = blur1 > 0.1 ? `blur(${blur1.toFixed(2)}px)` : '';
+    scene2.style.filter = blur2 > 0.1 ? `blur(${blur2.toFixed(2)}px)` : '';
+    scene3.style.filter = blur3 > 0.1 ? `blur(${blur3.toFixed(2)}px)` : '';
+
+    if (p >= S1) {
+      mist.style.opacity = '0';
+      shaft.style.opacity = (0.30 * (1 - smoothstep(S1, S1 + 0.10, p))).toFixed(3);
+    }
+
+    /* ---------- three seams ---------- */
     const veilAt = (s) => 0.94 * smoothstep(s - 0.050, s, p) *
                           (1 - smoothstep(s, s + 0.085, p));
-    veil.style.opacity = Math.max(veilAt(S1), veilAt(S2)).toFixed(3);
+    veil.style.opacity = Math.max(veilAt(S1), veilAt(S2), veilAt(S3)).toFixed(3);
 
     const flashAt = (s) => 0.25 * smoothstep(s - 0.02, s, p) *
                            (1 - smoothstep(s, s + 0.02, p));
-    flash.style.opacity = Math.max(flashAt(S1), flashAt(S2)).toFixed(3);
+    flash.style.opacity = Math.max(flashAt(S1), flashAt(S2), flashAt(S3)).toFixed(3);
     flash.style.visibility =
-      (p > S1 - 0.03 && p < S1 + 0.03) || (p > S2 - 0.03 && p < S2 + 0.03)
+      (Math.abs(p - S1) < 0.03 || Math.abs(p - S2) < 0.03 || Math.abs(p - S3) < 0.03)
         ? 'visible' : 'hidden';
 
-    vignette.style.opacity = (0.7 + 0.3 * smoothstep(0.44, 0.50, p)).toFixed(3);
+    vignette.style.opacity = (0.85 + 0.15 * smoothstep(0.30, 0.52, p)).toFixed(3);
 
-    // ---- copy ----
-    const a1 = 1 - smoothstep(0.00, 0.10, p);
-    const a2 = smoothstep(0.12, 0.22, p) * (1 - smoothstep(0.27, 0.35, p));
-    const a3 = smoothstep(0.43, 0.50, p) * (1 - smoothstep(0.55, 0.62, p));
-    const a4 = smoothstep(0.58, 0.65, p) * (1 - smoothstep(0.70, 0.76, p));
-    const a5 = smoothstep(0.78, 0.87, p);
+    /* ---------- copy ---------- */
+    const a0 = 1 - smoothstep(0.06, 0.15, p);
+    const a1 = smoothstep(0.31, 0.38, p) * (1 - smoothstep(0.46, 0.50, p));
+    const a2 = smoothstep(0.59, 0.66, p) * (1 - smoothstep(0.73, 0.78, p));
+    const a3 = smoothstep(0.87, 0.92, p) * (1 - smoothstep(0.95, 0.98, p));
+    const a4 = smoothstep(0.88, 0.94, p);
+
+    c0.style.opacity = a0.toFixed(3);
+    c0.style.transform = `translate3d(0, ${((1 - a0) * 30).toFixed(1)}px, 0)`;
 
     c1.style.opacity = a1.toFixed(3);
-    c1.style.transform = `translate3d(0, ${(-smoothstep(0, 0.12, p) * 60).toFixed(1)}px, 0) scale(${(1 + smoothstep(0, 0.25, p) * 0.03).toFixed(4)})`;
-    c2.style.opacity = a2.toFixed(3);
-    c2.style.transform = `translate3d(0, calc(-50% + ${((1 - a2) * 34).toFixed(1)}px), 0)`;
-    c3.style.opacity = a3.toFixed(3);
-    c3.style.transform = `translate3d(0, calc(-50% + ${((1 - a3) * 36).toFixed(1)}px), 0)`;
-    c4.style.opacity = a4.toFixed(3);
-    c4.style.transform = `translate3d(0, calc(-50% + ${((1 - a4) * 36).toFixed(1)}px), 0)`;
-    c5.style.opacity = a5.toFixed(3);
-    c5.style.transform = `translate3d(0, calc(-50% + ${((1 - a5) * 40).toFixed(1)}px), 0)`;
+    c1.style.transform = `translate3d(0, calc(-50% + ${((1 - a1) * 34).toFixed(1)}px), 0)`;
+    c2.style.opacity = a1.toFixed(3);
+    c2.style.transform = `translate3d(0, calc(-50% + ${((1 - a1) * 34).toFixed(1)}px), 0)`;
+    c3.style.opacity = a2.toFixed(3);
+    c3.style.transform = `translate3d(0, calc(-50% + ${((1 - a2) * 36).toFixed(1)}px), 0)`;
+    c4.style.opacity = a3.toFixed(3);
+    c4.style.transform = `translate3d(0, calc(-50% + ${((1 - a3) * 36).toFixed(1)}px), 0)`;
+    c5.style.opacity = a4.toFixed(3);
+    c5.style.transform = `translate3d(0, calc(-50% + ${((1 - a4) * 40).toFixed(1)}px), 0)`;
 
-    // ---- the finale arrives in beats ----
-    // time-driven, not scroll-driven: the silence between lines stays real even
-    // if the viewer scrolls fast or stops dead at the end
+    /* ---------- the finale, in beats ---------- */
     if (p > 0.86) {
       if (!finaleT0) finaleT0 = now || performance.now();
     } else {
@@ -631,21 +623,21 @@
     c5c.style.opacity = beat3.toFixed(3);
     c5c.style.transform = `translate3d(0, ${((1 - beat3) * 14).toFixed(1)}px, 0)`;
 
-    // one shared camera dive; scaled down on short / narrow viewports
+    /* ---------- world dive, retimed for four acts ---------- */
     const diveScale = Math.min(1, Math.max(0.5,
       Math.min(window.innerWidth / 1440, window.innerHeight / 720)));
-    const dive = smoothstep(0.36, 0.52, p) * -640 * diveScale;
+    const dive = (smoothstep(0.30, 0.62, p) * -440 +
+                  smoothstep(0.78, 0.88, p) * -200) * diveScale;
 
     world.style.transform =
       `translate3d(0, ${dive.toFixed(1)}px, 0) ` +
       `rotateX(${(-cy * 1.0).toFixed(2)}deg) ` +
       `rotateY(${(cx * 1.5).toFixed(2)}deg)`;
 
-    // chrome
+    /* ---------- chrome ---------- */
     railFill.style.height = (p * 100).toFixed(1) + '%';
     rail.setAttribute('aria-valuenow', Math.round(p * 100));
     hint.style.opacity = (p > 0.025 || auto) ? '0' : '1';
-    // button label follows the real position: ↻ at the end, ▶ elsewhere when stopped
     if (!auto) {
       if (p >= 0.999) playBtn.textContent = '↻';
       else if (playBtn.textContent !== '▶') playBtn.textContent = '▶';
@@ -665,7 +657,6 @@
   window.addEventListener('resize', () => { measure(); kick(); }, { passive: true });
   window.addEventListener('orientationchange', () => { setTimeout(measure, 250); });
 
-  /* pointer sway — mouse only, iOS fires pointermove on drags and churns this */
   let tx = 0, ty = 0, cx = 0, cy = 0, swayRaf = false;
   window.addEventListener('pointermove', (e) => {
     if (reduceMotion.matches || e.pointerType !== 'mouse') return;
@@ -690,7 +681,6 @@
 
   render();
 
-  /* auto-start on a fresh visit; deep links / restored scroll never autoplay */
   if (startP === 0 && window.scrollY < 4 && !reduceMotion.matches) {
     let seen = false;
     try { seen = localStorage.getItem('hw_seen') === '1'; } catch (_) {}
