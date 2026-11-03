@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>THE LONG WAY — 路在低处</title>
+<meta name="description" content="一条往下走的路。门、城、尽头。" />
+
+<!-- link preview — absolute URLs only; relative og:image is ignored by every client -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="THE LONG WAY" />
+<meta property="og:description" content="有些东西，建了几百年，还没建完。" />
+<meta property="og:image" content="https://demographic-statements-vip-trunk.trycloudflare.com/og-card.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:url" content="https://demographic-statements-vip-trunk.trycloudflare.com/" />
+<meta property="og:locale" content="zh_CN" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="THE LONG WAY" />
+<meta name="twitter:description" content="有些东西，建了几百年，还没建完。" />
+<meta name="twitter:image" content="https://demographic-statements-vip-trunk.trycloudflare.com/og-card.jpg" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1218'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%23ffe9b8' font-family='serif'%3EL%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; background: #0b1218; }
+  body {
+    margin: 0; background: #0b1218; color: #fffcf3;
+    font-family: "Cormorant Garamond", "Noto Serif SC", serif;
+    overflow-x: clip;
+  }
+
+  .journey { position: relative; height: 900vh; }
+
+  .stage {
+    position: sticky; top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    background: #8fb6cd;
+    perspective: 1200px;
+    perspective-origin: 50% 58%;
+    isolation: isolate;
+  }
+
+  .world { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+
+  .scene { position: absolute; inset: 0; transform-style: preserve-3d; will-change: opacity; }
+
+  .band {
+    position: absolute; left: 0; top: 0;
+    width: 100%; height: auto;
+    /* on narrow screens width:100% yields an image shorter than the viewport —
+       min-height + cover guarantees the band always fills the stage vertically */
+    min-height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+    transform-origin: 50% 0%;
+    backface-visibility: hidden;
+    will-change: transform;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+  }
+
+  .vignette {
+    position: absolute; inset: 0; z-index: 20; pointer-events: none;
+    background:
+      radial-gradient(115% 78% at 50% 12%, transparent 42%, rgba(6,16,26,.44) 100%),
+      linear-gradient(180deg, rgba(6,18,28,.46) 0%, transparent 24%, transparent 74%, rgba(6,18,28,.56) 100%);
+  }
+
+  .flash {
+    position: absolute; inset: 0; z-index: 22; pointer-events: none; opacity: 0;
+    background: radial-gradient(circle at 50% 54%,
+      rgba(255,253,244,.95) 0%, rgba(255,246,222,.62) 22%,
+      rgba(255,236,200,.22) 44%, rgba(255,236,200,0) 68%);
+    mix-blend-mode: screen;
+  }
+
+  /* the darkness underneath the arch — the cut hides inside it */
+  .veil {
+    position: absolute; inset: 0; z-index: 25;
+    pointer-events: none; opacity: 0;
+    background: #08101a;
+  }
+
+  /* letterbox — cheap cinema */
+  .bar {
+    position: fixed; left: 0; right: 0; height: 4vh;
+    background: #060b11; z-index: 55; pointer-events: none;
+    transition: opacity .6s ease;
+  }
+  .bar-top { top: 0; }
+  .bar-bottom { bottom: 0; }
+
+  .copy {
+    position: absolute; left: 0; right: 0; z-index: 30; padding: 0 24px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    pointer-events: none; will-change: transform, opacity;
+  }
+  .copy .kicker {
+    font-family: "Noto Serif SC", serif; font-size: clamp(.6rem, 1.05vw, .76rem);
+    letter-spacing: .5em; text-transform: uppercase;
+    color: rgba(255,252,243,.75); margin-bottom: 1em;
+    text-shadow: 0 2px 14px rgba(20,50,80,.85);
+  }
+  .copy h1 {
+    font-family: "Cormorant Garamond", serif; font-weight: 500;
+    font-size: clamp(2.6rem, 12vw, 11rem); line-height: .82; letter-spacing: .06em;
+    text-shadow: 0 10px 60px rgba(20,55,90,.85), 0 2px 5px rgba(30,70,100,.6);
+  }
+  .copy h2 {
+    font-family: "Cormorant Garamond", "Noto Serif SC", serif; font-weight: 500;
+    font-size: clamp(1.4rem, 3.4vw, 2.9rem); line-height: 1.28; letter-spacing: .04em;
+    text-shadow: 0 6px 34px rgba(10,35,60,.95);
+  }
+  .copy p {
+    max-width: 28em; margin-top: 1.05em;
+    font-family: "Noto Serif SC", serif;
+    font-size: clamp(.82rem, 1.2vw, 1rem); line-height: 1.95; letter-spacing: .06em;
+    color: rgba(255,252,243,.95);
+    text-shadow: 0 2px 18px rgba(6,30,55,.98);
+  }
+
+  .c1 { top: 8vh; }
+  .c2 { top: 50%; transform: translateY(-50%); }
+  .c3 { top: 50%; transform: translateY(-50%); }
+  .c4 { top: 50%; transform: translateY(-50%); }
+  .c5 { top: 50%; transform: translateY(-50%); }
+  .copy .name { color: #ffe9b8; letter-spacing: .12em; }
+  .copy .sign {
+    margin-top: 2em;
+    font-family: "Cormorant Garamond", "Noto Serif SC", serif;
+    font-style: italic;
+    font-size: clamp(.86rem, 1.15vw, 1.02rem);
+    letter-spacing: .3em;
+    color: rgba(255,242,214,.72);
+    text-shadow: 0 2px 16px rgba(6,30,55,.9);
+  }
+  /* the finale arrives in beats, so each line owns its own reveal */
+  #c5a, #c5b, #c5c { opacity: 0; will-change: opacity, transform; }
+
+  /* progress rail, now a scrubber */
+  .rail {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+    width: 2px; height: 160px; background: rgba(255,252,243,.16);
+    border-radius: 2px; z-index: 60; cursor: ns-resize;
+    touch-action: none;
+  }
+  .rail::before { content: ""; position: absolute; inset: -14px -12px; }
+  .rail i {
+    position: absolute; top: 0; left: 0; width: 100%; height: 0%;
+    background: rgba(255,252,243,.9); border-radius: 2px;
+  }
+  .rail b {
+    position: absolute; left: -3px; width: 8px; height: 1px;
+    background: rgba(255,252,243,.45);
+  }
+
+  .playBtn {
+    position: fixed; right: 34px; bottom: calc(4vh + 22px); z-index: 62;
+    width: 48px; height: 48px;
+    border: 1px solid rgba(255,252,243,.28);
+    border-radius: 999px;
+    background: rgba(10,18,26,.62);
+    backdrop-filter: blur(10px);
+    color: rgba(255,252,243,.95);
+    font-size: 13px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 22px rgba(0,0,0,.38);
+    transition: background .25s ease, transform .25s ease, border-color .25s ease;
+  }
+  .playBtn:hover {
+    background: rgba(255,252,243,.16);
+    border-color: rgba(255,252,243,.55);
+    transform: scale(1.07);
+  }
+
+  .hint {
+    position: fixed; left: 50%; bottom: calc(4vh + 26px); transform: translateX(-50%);
+    font-family: "Noto Serif SC", serif; font-size: .72rem; letter-spacing: .4em;
+    color: rgba(255,252,243,.55); z-index: 60; transition: opacity .5s ease;
+    animation: bob 2.6s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%,100% { transform: translate(-50%, 0); }
+    50%     { transform: translate(-50%, 7px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hint { animation: none; }
+  }
+  @media (max-height: 600px) { .bar { height: 2.5vh; } }
+</style>
+</head>
+<body>
+
+<section class="journey" id="journey">
+  <div class="stage" id="stage">
+    <div class="world" id="world">
+
+      <div class="scene scene-a" id="sceneA">
+        <img class="band a" src="assets/griffin/band-0.webp" data-z="-1040" alt="" decoding="async" />
+        <img class="band a" src="assets/griffin/band-1.webp" data-z="-760"  alt="" decoding="async" />
+        <img class="band a" src="assets/griffin/band-2.webp" data-z="-500"  alt="" decoding="async" />
+        <img class="band a" src="assets/griffin/band-3.webp" data-z="-260"  alt="" decoding="async" />
+        <img class="band a" src="assets/griffin/band-4.webp" data-z="-40"   alt="" fetchpriority="high" />
+      </div>
+
+      <div class="scene scene-b" id="sceneB">
+        <img class="band b" data-src="assets/sinkhole/band-0.webp" data-z="-1040" alt="" decoding="async" />
+        <img class="band b" data-src="assets/sinkhole/band-1.webp" data-z="-760"  alt="" decoding="async" />
+        <img class="band b" data-src="assets/sinkhole/band-2.webp" data-z="-500"  alt="" decoding="async" />
+        <img class="band b" data-src="assets/sinkhole/band-3.webp" data-z="-260"  alt="" decoding="async" />
+        <img class="band b" data-src="assets/sinkhole/band-4.webp" data-z="-40"   alt="" decoding="async" />
+      </div>
+
+      <div class="scene scene-c" id="sceneC">
+        <img class="band c" data-src="assets/shrine/band-0.webp" data-z="-1040" alt="" decoding="async" />
+        <img class="band c" data-src="assets/shrine/band-1.webp" data-z="-760"  alt="" decoding="async" />
+        <img class="band c" data-src="assets/shrine/band-2.webp" data-z="-500"  alt="" decoding="async" />
+        <img class="band c" data-src="assets/shrine/band-3.webp" data-z="-260"  alt="" decoding="async" />
+        <img class="band c" data-src="assets/shrine/band-4.webp" data-z="-40"   alt="" decoding="async" />
+      </div>
+
+    </div>
+
+    <div class="flash" id="flash"></div>
+    <div class="veil" id="veil"></div>
+    <div class="vignette" id="vignette"></div>
+
+    <div class="copy c1" id="c1">
+      <div class="kicker">一 · 门</div>
+      <h1>THE LONG WAY</h1>
+    </div>
+
+    <div class="copy c2" id="c2">
+      <h2>有些门开在天上。</h2>
+      <p>认了路的人，不问为什么。</p>
+    </div>
+
+    <div class="copy c3" id="c3">
+      <div class="kicker">二 · 城</div>
+      <h2>城一层压着一层，<br />压进地底。</h2>
+      <p>住得高的人，听不见下面的声音。</p>
+    </div>
+
+    <div class="copy c4" id="c4">
+      <div class="kicker">三 · 尽头</div>
+      <h2>河走到这里就不走了，<br />石头替它站着。</h2>
+      <p>城长在石头上，像一句没说完的话。</p>
+    </div>
+
+    <div class="copy c5" id="c5">
+      <h2 id="c5a">路还长。</h2>
+      <p id="c5b">愿风替你开门，愿你在无人处仍有火。</p>
+      <p class="sign" id="c5c">—— 生日快乐，<span class="name">名字</span></p>
+    </div>
+
+  </div>
+</section>
+
+<div class="bar bar-top" id="barTop"></div>
+<div class="bar bar-bottom" id="barBottom"></div>
+
+<div class="rail" id="rail" role="slider" tabindex="0" aria-label="滚动进度"
+     aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <i id="railFill"></i>
+  <b style="top:42%"></b>
+  <b style="top:74%"></b>
+</div>
+
+<button class="playBtn" id="playBtn" aria-label="播放 / 暂停">▶</button>
+<div class="hint" id="hint">向 下 滚 动</div>
+
+<script>
+(() => {
+  // this page owns its own progress — never let the browser restore a scroll position
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  const journey = document.getElementById('journey');
+  const world   = document.getElementById('world');
+  const sceneA  = document.getElementById('sceneA');
+  const sceneB  = document.getElementById('sceneB');
+  const sceneC  = document.getElementById('sceneC');
+  const flash   = document.getElementById('flash');
+  const veil    = document.getElementById('veil');
+  const vignette= document.getElementById('vignette');
+  const rail    = document.getElementById('rail');
+  const railFill= document.getElementById('railFill');
+  const playBtn = document.getElementById('playBtn');
+  const hint    = document.getElementById('hint');
+  const barTop  = document.getElementById('barTop');
+  const barBottom = document.getElementById('barBottom');
+  const c1 = document.getElementById('c1');
+  const c2 = document.getElementById('c2');
+  const c3 = document.getElementById('c3');
+  const c4 = document.getElementById('c4');
+  const c5 = document.getElementById('c5');
+  const c5a = document.getElementById('c5a');
+  const c5b = document.getElementById('c5b');
+  const c5c = document.getElementById('c5c');
+
+  const bandsA = [...sceneA.querySelectorAll('.band')];
+  const bandsB = [...sceneB.querySelectorAll('.band')];
+  const bandsC = [...sceneC.querySelectorAll('.band')];
+
+  const PERSPECTIVE = 1200;
+  const CAM = 1150;
+  const SWITCH = 0.50;
+
+  let total = 0, target = 0, current = 0, raf = null, finaleT0 = 0;
+  let preloaded = false;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const smoothstep = (e0, e1, v) => {
+    const x = clamp((v - e0) / (e1 - e0));
+    return x * x * (3 - 2 * x);
+  };
+
+  const compOf = () => 1;
+
+  /* ---------------- measurement (cached — getBoundingClientRect every frame forces layout) ---------------- */
+  function measure() {
+    total = Math.max(1, journey.offsetHeight - window.innerHeight);
+  }
+  measure();
+
+  /* ---------------- layering ---------------- */
+  function flyScene(bands, localP, globalP, fadeStart, fadeOut, camTravel = CAM) {
+    const cam = localP * camTravel;
+    for (const b of bands) {
+      const z0 = parseFloat(b.dataset.z);
+      const z = z0 + cam;
+
+      const approach = smoothstep(180, 900, z);
+      const blur = approach * 6.5;
+      const dim  = 1 - approach * 0.2;
+
+      const near = clamp((z0 + 1100) / 1100);
+      const opLeave = 1 - approach;
+      const opSchedule = 1 - smoothstep(
+        fadeStart + near * 0.10,
+        fadeStart + near * 0.10 + 0.16,
+        globalP
+      ) * (1 - fadeOut);
+
+      b.style.transform = `translate3d(0, 0, ${z.toFixed(1)}px) scale(${compOf().toFixed(4)})`;
+      if (blur > 0.05) {
+        b.style.filter = `blur(${blur.toFixed(2)}px) brightness(${dim.toFixed(3)})`;
+      } else if (b.style.filter) {
+        b.style.filter = '';
+      }
+      b.style.opacity = clamp(Math.min(opLeave, opSchedule), 0, 1).toFixed(3);
+    }
+  }
+
+  /* ---------------- autoplay : drives the scrollbar, never a hidden camera ---------------- */
+  const WP = [[0, 0], [0.42, 8000], [0.74, 17000], [1, 25000]];
+  // scrollTo() dispatches its scroll event asynchronously, so a plain boolean is
+  // already false by the time the handler runs. Time alone is not enough either:
+  // on throttled devices the event can arrive well after the window. Match on the
+  // exact Y we asked for — that identity holds no matter how late the event lands.
+  const SCROLL_GRACE_MS = 150;
+  let auto = false, apTime = 0, lastT = 0, ignoreScrollUntil = 0, autoTargetY = -1;
+
+  function pFromTime(t) {
+    let i = 0;
+    while (i < WP.length - 2 && t > WP[i + 1][1]) i++;
+    const [p0, t0] = WP[i], [p1, t1] = WP[i + 1];
+    return p0 + (p1 - p0) * smoothstep(0, t1 - t0, t - t0);
+  }
+
+  function startAuto() {
+    if (reduceMotion.matches) {
+      // reduced motion: never autoplay, but the button must not be a silent
+      // no-op — take the user back to the top so the journey reads from the start.
+      if (window.scrollY > 4) window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    auto = true;
+    // use the REAL scroll position, not the eased `current` — `current` lags and
+    // would start the timeline wherever the lerp happened to be
+    apTime = clamp(window.scrollY / total) * 25000;
+    lastT = performance.now();
+    playBtn.textContent = '❚❚';
+    hint.style.opacity = '0';
+    kick();
+  }
+
+  function stopAuto() {
+    if (!auto) return;
+    auto = false;
+    playBtn.textContent = current >= 0.999 ? '↻' : '▶';
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (auto) return stopAuto();
+    // the scrollbar is the source of truth — `target` is already 1 the frame
+    // autoplay finishes, whereas eased `current` lags a few frames
+    if (target >= 0.999) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      current = 0;
+      setTimeout(startAuto, 120);
+    } else {
+      startAuto();
+    }
+  });
+
+  window.addEventListener('wheel', stopAuto, { passive: true });
+  window.addEventListener('touchstart', stopAuto, { passive: true });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { e.preventDefault(); auto ? stopAuto() : startAuto(); }
+    else if (['ArrowDown','ArrowUp','PageDown','PageUp','Home','End'].includes(e.key)) stopAuto();
+    else if (e.key === '1') stopAuto(), window.scrollTo({ top: 0, behavior: 'smooth' });
+    else if (e.key === '2') stopAuto(), window.scrollTo({ top: total * SWITCH, behavior: 'smooth' });
+  });
+  window.addEventListener('scroll', () => {
+    // our own autoplay step lands exactly on autoTargetY — ignore it however late
+    // the event arrives (throttled rAF can delay it past any fixed time window)
+    if (auto && Math.abs(window.scrollY - autoTargetY) <= 2) return;
+    if (performance.now() < ignoreScrollUntil) return;
+    stopAuto();
+  }, { passive: true });
+
+  /* ---------------- rail scrubbing ---------------- */
+  let scrubbing = false;
+  function scrubTo(clientY) {
+    const r = rail.getBoundingClientRect();
+    const p = clamp((clientY - r.top) / r.height);
+    window.scrollTo({ top: total * p, behavior: 'instant' });
+  }
+  rail.addEventListener('pointerdown', (e) => {
+    stopAuto(); scrubbing = true;
+    rail.setPointerCapture(e.pointerId);
+    scrubTo(e.clientY);
+  });
+  rail.addEventListener('pointermove', (e) => { if (scrubbing) scrubTo(e.clientY); });
+  rail.addEventListener('pointerup', () => { scrubbing = false; });
+  rail.addEventListener('pointercancel', () => { scrubbing = false; });
+
+  /* ---------------- render ---------------- */
+  function render(now) {
+    raf = null;
+
+    if (auto) {
+      const dt = Math.min(50, (now || performance.now()) - lastT);
+      lastT = now || performance.now();
+      apTime += dt;
+      ignoreScrollUntil = performance.now() + SCROLL_GRACE_MS;
+      autoTargetY = Math.round(total * pFromTime(apTime));
+      window.scrollTo({ top: autoTargetY, behavior: 'instant' });
+      if (pFromTime(apTime) >= 1) stopAuto();
+    }
+
+    target = clamp(window.scrollY / total);
+
+    if (reduceMotion.matches) {
+      current = target;
+    } else {
+      current += (target - current) * (auto ? 0.2 : 0.11);
+      if (Math.abs(current - target) <= 0.0003) current = target;
+    }
+
+    /* lazy-load scene B just before it is needed, while it is still invisible */
+    if (!preloaded && current > 0.25) {
+      preloaded = true;
+      bandsB.forEach((b) => { if (b.dataset.src) b.src = b.dataset.src; });
+      bandsC.forEach((b) => { if (b.dataset.src) b.src = b.dataset.src; });
+    }
+
+    const p = current;
+
+    // ---- three acts, two seams ----
+    const S1 = 0.42, S2 = 0.74;
+
+    // A — camera freezes early so the bridge bands stay alive for the reveal
+    flyScene(bandsA, 0.72 * clamp(p / 0.30), p, 0.28, 1);
+
+    // B — rides A's frozen depth while hidden, then advances inside its own window
+    const pB = p < S1
+      ? 0.72 * clamp(p / 0.30)
+      : clamp(0.72 + (p - S1) / (S2 - S1) * 0.28);
+    flyScene(bandsB, pB, p, 2, 0);
+
+    // C — only moves after the second seam
+    flyScene(bandsC, 0.72 * clamp((p - S2) / (1 - S2)), p, 2, 0);
+
+    const isA = p < S1, isB = p >= S1 && p < S2, isC = p >= S2;
+    sceneA.style.opacity = isA ? '1' : '0';
+    sceneB.style.opacity = isB ? '1' : '0';
+    sceneC.style.opacity = isC ? '1' : '0';
+
+    // keep off-screen scenes out of compositing (visibility, never display)
+    sceneA.style.visibility = p > S1 + 0.02 ? 'hidden' : 'visible';
+    sceneB.style.visibility = (p < S1 - 0.02 || p > S2 + 0.02) ? 'hidden' : 'visible';
+    sceneC.style.visibility = p < S2 - 0.02 ? 'hidden' : 'visible';
+
+    // the incoming act resolves out of a slight blur across its seam
+    const blurB = 3 * (1 - smoothstep(S1 - 0.040, S1, p));
+    const blurC = 3 * (1 - smoothstep(S2 - 0.040, S2, p));
+    sceneB.style.filter = blurB > 0.1 ? `blur(${blurB.toFixed(2)}px)` : '';
+    sceneC.style.filter = blurC > 0.1 ? `blur(${blurC.toFixed(2)}px)` : '';
+
+    // both cuts hide inside shadow — darken into the arch, rise out the other side
+    const veilAt = (s) => 0.94 * smoothstep(s - 0.050, s, p) *
+                          (1 - smoothstep(s, s + 0.085, p));
+    veil.style.opacity = Math.max(veilAt(S1), veilAt(S2)).toFixed(3);
+
+    const flashAt = (s) => 0.25 * smoothstep(s - 0.02, s, p) *
+                           (1 - smoothstep(s, s + 0.02, p));
+    flash.style.opacity = Math.max(flashAt(S1), flashAt(S2)).toFixed(3);
+    flash.style.visibility =
+      (p > S1 - 0.03 && p < S1 + 0.03) || (p > S2 - 0.03 && p < S2 + 0.03)
+        ? 'visible' : 'hidden';
+
+    vignette.style.opacity = (0.7 + 0.3 * smoothstep(0.44, 0.50, p)).toFixed(3);
+
+    // ---- copy ----
+    const a1 = 1 - smoothstep(0.00, 0.10, p);
+    const a2 = smoothstep(0.12, 0.22, p) * (1 - smoothstep(0.27, 0.35, p));
+    const a3 = smoothstep(0.43, 0.50, p) * (1 - smoothstep(0.55, 0.62, p));
+    const a4 = smoothstep(0.58, 0.65, p) * (1 - smoothstep(0.70, 0.76, p));
+    const a5 = smoothstep(0.78, 0.87, p);
+
+    c1.style.opacity = a1.toFixed(3);
+    c1.style.transform = `translate3d(0, ${(-smoothstep(0, 0.12, p) * 60).toFixed(1)}px, 0) scale(${(1 + smoothstep(0, 0.25, p) * 0.03).toFixed(4)})`;
+    c2.style.opacity = a2.toFixed(3);
+    c2.style.transform = `translate3d(0, calc(-50% + ${((1 - a2) * 34).toFixed(1)}px), 0)`;
+    c3.style.opacity = a3.toFixed(3);
+    c3.style.transform = `translate3d(0, calc(-50% + ${((1 - a3) * 36).toFixed(1)}px), 0)`;
+    c4.style.opacity = a4.toFixed(3);
+    c4.style.transform = `translate3d(0, calc(-50% + ${((1 - a4) * 36).toFixed(1)}px), 0)`;
+    c5.style.opacity = a5.toFixed(3);
+    c5.style.transform = `translate3d(0, calc(-50% + ${((1 - a5) * 40).toFixed(1)}px), 0)`;
+
+    // ---- the finale arrives in beats ----
+    // time-driven, not scroll-driven: the silence between lines stays real even
+    // if the viewer scrolls fast or stops dead at the end
+    if (p > 0.86) {
+      if (!finaleT0) finaleT0 = now || performance.now();
+    } else {
+      finaleT0 = 0;
+    }
+    const el = finaleT0 ? ((now || performance.now()) - finaleT0) : 0;
+    const beat1 = smoothstep(150, 1000, el);
+    const beat2 = smoothstep(1900, 2750, el);
+    const beat3 = smoothstep(4200, 5200, el);
+
+    c5a.style.opacity = beat1.toFixed(3);
+    c5a.style.transform = `translate3d(0, ${((1 - beat1) * 18).toFixed(1)}px, 0)`;
+    c5b.style.opacity = beat2.toFixed(3);
+    c5b.style.transform = `translate3d(0, ${((1 - beat2) * 16).toFixed(1)}px, 0)`;
+    c5c.style.opacity = beat3.toFixed(3);
+    c5c.style.transform = `translate3d(0, ${((1 - beat3) * 14).toFixed(1)}px, 0)`;
+
+    // one shared camera dive; scaled down on short / narrow viewports
+    const diveScale = Math.min(1, Math.max(0.5,
+      Math.min(window.innerWidth / 1440, window.innerHeight / 720)));
+    const dive = smoothstep(0.36, 0.52, p) * -640 * diveScale;
+
+    world.style.transform =
+      `translate3d(0, ${dive.toFixed(1)}px, 0) ` +
+      `rotateX(${(-cy * 1.0).toFixed(2)}deg) ` +
+      `rotateY(${(cx * 1.5).toFixed(2)}deg)`;
+
+    // chrome
+    railFill.style.height = (p * 100).toFixed(1) + '%';
+    rail.setAttribute('aria-valuenow', Math.round(p * 100));
+    hint.style.opacity = (p > 0.025 || auto) ? '0' : '1';
+    // button label follows the real position: ↻ at the end, ▶ elsewhere when stopped
+    if (!auto) {
+      if (p >= 0.999) playBtn.textContent = '↻';
+      else if (playBtn.textContent !== '▶') playBtn.textContent = '▶';
+    }
+    const barO = 1 - smoothstep(0.55, 0.70, p);
+    barTop.style.opacity = barO.toFixed(3);
+    barBottom.style.opacity = barO.toFixed(3);
+
+    if (auto || Math.abs(current - target) >= 0.0003 ||
+        (finaleT0 && (performance.now() - finaleT0) < 5500)) {
+      raf = requestAnimationFrame(render);
+    }
+  }
+
+  const kick = () => { if (!raf) raf = requestAnimationFrame(render); };
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', () => { measure(); kick(); }, { passive: true });
+  window.addEventListener('orientationchange', () => { setTimeout(measure, 250); });
+
+  /* pointer sway — mouse only, iOS fires pointermove on drags and churns this */
+  let tx = 0, ty = 0, cx = 0, cy = 0, swayRaf = false;
+  window.addEventListener('pointermove', (e) => {
+    if (reduceMotion.matches || e.pointerType !== 'mouse') return;
+    tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    ty = (e.clientY / window.innerHeight - 0.5) * 2;
+    if (!swayRaf) { swayRaf = true; requestAnimationFrame(sway); }
+  }, { passive: true });
+
+  function sway() {
+    cx += (tx - cx) * 0.07;
+    cy += (ty - cy) * 0.07;
+    kick();
+    if (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001) requestAnimationFrame(sway);
+    else swayRaf = false;
+  }
+
+  const qp = new URLSearchParams(location.search);
+  const startP = parseFloat(qp.get('p') || '0');
+  if (startP > 0) {
+    window.scrollTo({ top: total * startP, behavior: 'instant' });
+  }
+
+  render();
+
+  /* auto-start on a fresh visit; deep links / restored scroll never autoplay */
+  if (startP === 0 && window.scrollY < 4 && !reduceMotion.matches) {
+    let seen = false;
+    try { seen = localStorage.getItem('hw_seen') === '1'; } catch (_) {}
+    setTimeout(() => {
+      if (!auto && window.scrollY < 4) {
+        startAuto();
+        try { localStorage.setItem('hw_seen', '1'); } catch (_) {}
+      }
+    }, seen ? 700 : 1800);
+  }
+})();
+</script>
+</body>
+</html>
