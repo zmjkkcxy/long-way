@@ -1,0 +1,44 @@
+/* Self-hosted webfonts — zero external requests.
+   Noto Serif SC is subset to the characters actually used on this page.
+   Regenerate with _test/selfhost_fonts.py whenever the copy changes. */
+
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('noto-serif-sc-normal-300-subset.woff2') format('woff2');
+  unicode-range: U+20, U+b7, U+2014, U+3002, U+4e00, U+4e0a-4e0b, U+4e0d, U+4e3a, U+4e86, U+4e9b, U+4eba, U+4eca, U+4ece, U+4ee3-4ee4, U+4ef0, U+4f1a, U+4f4d-4f4f, U+4f60, U+505c, U+5173, U+5199, U+51e0, U+51fa, U+5230, U+52a8, U+538b, U+53ea, U+5411, U+547d, U+5728, U+5730, U+57ce, U+5904, U+5916, U+591f, U+5929, U+5934, U+597d, U+59cb, U+5b83, U+5b88, U+5c31, U+5c3d, U+5c42, U+5df1, U+5e74, U+5e95, U+5ea6, U+5f00, U+5f80, U+60f3, U+6316, U+64ad, U+6536, U+653e, U+65b0, U+65c5, U+662f, U+6682, U+66ff, U+6709, U+671b, U+6765, U+6c34, U+6ca1, U+6cb3, U+6d41, U+6eda, U+72ee, U+767e, U+7684, U+7740, U+77f3, U+7ad9, U+7b49, U+7ed9, U+81ea, U+81f3, U+8d70, U+8d77, U+8def, U+8fd9, U+8fdb, U+9053, U+90a3, U+9192, U+91cc-91cd, U+95e8, U+9e6b, U+ff0c;
+}
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('noto-serif-sc-normal-400-subset.woff2') format('woff2');
+  unicode-range: U+20, U+b7, U+2014, U+3002, U+4e00, U+4e0a-4e0b, U+4e0d, U+4e3a, U+4e86, U+4e9b, U+4eba, U+4eca, U+4ece, U+4ee3-4ee4, U+4ef0, U+4f1a, U+4f4d-4f4f, U+4f60, U+505c, U+5173, U+5199, U+51e0, U+51fa, U+5230, U+52a8, U+538b, U+53ea, U+5411, U+547d, U+5728, U+5730, U+57ce, U+5904, U+5916, U+591f, U+5929, U+5934, U+597d, U+59cb, U+5b83, U+5b88, U+5c31, U+5c3d, U+5c42, U+5df1, U+5e74, U+5e95, U+5ea6, U+5f00, U+5f80, U+60f3, U+6316, U+64ad, U+6536, U+653e, U+65b0, U+65c5, U+662f, U+6682, U+66ff, U+6709, U+671b, U+6765, U+6c34, U+6ca1, U+6cb3, U+6d41, U+6eda, U+72ee, U+767e, U+7684, U+7740, U+77f3, U+7ad9, U+7b49, U+7ed9, U+81ea, U+81f3, U+8d70, U+8d77, U+8def, U+8fd9, U+8fdb, U+9053, U+90a3, U+9192, U+91cc-91cd, U+95e8, U+9e6b, U+ff0c;
+}
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('cinzel-normal-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('cormorant-garamond-italic-300.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('ibm-plex-mono-normal-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
