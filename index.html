@@ -4,12 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>THE LONG WAY — 路在低处</title>
-<meta name="description" content="一条往下走的路。门、城、尽头。" />
+<meta name="description" content="天上有门，地下有河。门关上的那天，人开始往下走。" />
 
 <!-- link preview — absolute URLs only; relative og:image is ignored by every client -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="THE LONG WAY" />
-<meta property="og:description" content="它有多高？" />
+<meta property="og:description" content="门关上的那天，河就不流了。" />
 <meta property="og:image" content="https://zmjkkcxy.github.io/long-way/og-card.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -19,13 +19,13 @@
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="THE LONG WAY" />
-<meta name="twitter:description" content="它有多高？" />
+<meta name="twitter:description" content="门关上的那天，河就不流了。" />
 <meta name="twitter:image" content="https://zmjkkcxy.github.io/long-way/og-card.jpg" />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1218'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%23ffe9b8' font-family='serif'%3EL%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; background: #0b1218; }
@@ -69,6 +69,12 @@
     position: absolute; left: 0; top: 0;
     width: 100%; height: auto;
     object-position: 50% 0%;
+    /* MUST be top-centre: the act-0 pan formula T = (V - s*bandH)*(1-pull)
+       aligns the image's BOTTOM edge to the viewport bottom at pull=0, which
+       is only true when scaling happens about y=0. With the default 50% 50%
+       origin the bottom lands cy*(s-1) ≈ 380px short and the stage background
+       shows through along the bottom of the opening frame. */
+    transform-origin: 50% 0%;
     backface-visibility: hidden;
     will-change: transform;
     user-select: none; -webkit-user-drag: none; pointer-events: none;
@@ -93,6 +99,12 @@
     mix-blend-mode: screen;
     will-change: opacity;
   }
+
+  /* .cave removed (2026-11-03): a synthetic radial "cave mouth" behind the wizard
+     always landed on his own silhouette and flattened it (wizard-zone luma 131 → 105),
+     and read as a grey smudge on the oil-painted cloud at every position tried.
+     If darkness is ever wanted here, use a full-frame exposure fade (see
+     _proof/cv-H_exposure.png), not a localised blob. */
 
   .vignette {
     position: absolute; inset: 0; z-index: 20; pointer-events: none;
@@ -132,36 +144,64 @@
     pointer-events: none; will-change: transform, opacity;
   }
   .copy .kicker {
-    font-family: "Noto Serif SC", serif; font-size: clamp(.6rem, 1.05vw, .76rem);
-    letter-spacing: .5em; text-transform: uppercase;
-    color: rgba(255,252,243,.75); margin-bottom: 1em;
+    font-family: "Noto Serif SC", serif; font-weight: 400;
+    font-size: clamp(.7rem, 1.15vw, .88rem);
+    letter-spacing: .5em; text-indent: .5em;
+    color: rgba(255,242,214,.78); margin-bottom: 1.05em;
     text-shadow: 0 2px 14px rgba(20,50,80,.85);
   }
+  /* Type system — three faces, three jobs, never three of the same kind:
+       Cinzel        inscriptional caps; the title only. Carved, not printed.
+       IBM Plex Mono metadata / act labels. A machine reading an old stone.
+       Noto Serif SC the Chinese voice: 400 for the line, 300 for the aside.
+       Cormorant it. the one soft layer; it does the breathing. */
   .copy h1 {
-    font-family: "Cormorant Garamond", serif; font-weight: 500;
-    font-size: clamp(2.4rem, 10vw, 9rem); line-height: .86; letter-spacing: .08em;
+    font-family: "Cinzel", serif; font-weight: 500;
+    font-size: clamp(2.3rem, 8.4vw, 6.8rem); line-height: .95;
+    letter-spacing: .12em; text-indent: .12em;
     text-shadow: 0 10px 60px rgba(20,55,90,.85), 0 2px 5px rgba(30,70,100,.6);
   }
   .copy h2 {
-    font-family: "Cormorant Garamond", "Noto Serif SC", serif; font-weight: 500;
-    font-size: clamp(1.4rem, 3.4vw, 2.9rem); line-height: 1.28; letter-spacing: .04em;
-    text-shadow: 0 6px 34px rgba(10,35,60,.95);
+    font-family: "Noto Serif SC", "Cormorant Garamond", serif; font-weight: 400;
+    font-size: clamp(1.45rem, 3.5vw, 2.85rem); line-height: 1.4;
+    letter-spacing: .06em;
+    text-shadow: 0 6px 34px rgba(10,35,60,.95), 0 1px 2px rgba(6,24,44,.6);
   }
   .copy p {
-    max-width: 28em; margin-top: 1.05em;
-    font-family: "Noto Serif SC", serif;
-    font-size: clamp(.82rem, 1.2vw, 1rem); line-height: 1.95; letter-spacing: .06em;
-    color: rgba(255,252,243,.95);
+    max-width: 30em; margin-top: 1.15em;
+    font-family: "Noto Serif SC", serif; font-weight: 300;
+    font-size: clamp(.82rem, 1.15vw, .98rem); line-height: 1.95;
+    letter-spacing: .04em;
+    color: rgba(255,252,243,.92);
     text-shadow: 0 2px 18px rgba(6,30,55,.98);
+  }
+
+  /* English layer — JRPG area titles + a quiet italic tagline.
+     Kept small and cool so the Chinese stays the subject. */
+  .copy .tag {
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace; font-weight: 400;
+    font-size: clamp(.56rem, .82vw, .65rem);
+    letter-spacing: .22em; text-indent: .22em; text-transform: uppercase;
+    color: rgba(255,238,205,.52);
+    margin-bottom: 1.5em;
+    text-shadow: 0 2px 14px rgba(6,26,48,.9);
+  }
+  .copy .en {
+    max-width: 23em; margin-top: 1em;
+    font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 300;
+    font-size: clamp(.77rem, 1.1vw, .92rem);
+    letter-spacing: .04em; line-height: 1.7;
+    color: rgba(255,252,243,.55);
+    text-shadow: 0 2px 16px rgba(4,22,42,.95);
   }
 
   .c0 { bottom: 13vh; }
   .c0 .word {
     font-family: "Noto Serif SC", serif; font-weight: 300;
-    font-size: clamp(1rem, 2.4vw, 1.9rem);
-    letter-spacing: 1em; text-indent: 1em;
-    color: rgba(255,250,240,.9);
-    text-shadow: 0 4px 30px rgba(6,20,40,.95);
+    font-size: clamp(1.05rem, 2.6vw, 2.05rem);
+    letter-spacing: 1.1em; text-indent: 1.1em;
+    color: rgba(255,250,240,.92);
+    text-shadow: 0 4px 30px rgba(6,20,40,.95), 0 1px 2px rgba(8,24,44,.5);
   }
 
   .c1 { top: 8vh; }
@@ -176,7 +216,7 @@
     color: rgba(255,242,214,.72);
     text-shadow: 0 2px 16px rgba(6,30,55,.9);
   }
-  #c5a, #c5b, #c5c { opacity: 0; will-change: opacity, transform; }
+  #c5a, #c5b, #c5c, #c5d { opacity: 0; will-change: opacity, transform; }
 
   .rail {
     position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
@@ -241,7 +281,7 @@
 
       <!-- ACT 0 — the colossus, a flat 2D pan (no depth slices) -->
       <div class="scene" id="scene0">
-        <img class="flat" id="flat0" src="assets/colossus/band-0.webp"
+        <img class="flat" id="flat0" src="assets/colossus/full.webp"
              alt="" fetchpriority="high" />
       </div>
 
@@ -282,7 +322,9 @@
     <div class="grain"></div>
 
     <div class="copy c0" id="c0">
+      <div class="tag">I · THE COLOSSUS</div>
       <div class="word">仰 望</div>
+      <div class="en">It has stood here since before the door closed.</div>
     </div>
 
     <div class="copy c1" id="c1">
@@ -291,24 +333,31 @@
     </div>
 
     <div class="copy c2" id="c2">
+      <div class="tag">II · THE GRIFFIN GATE</div>
       <h2>有些门开在天上。</h2>
-      <p>认了路的人，不问为什么。</p>
+      <p>门关上的那天，河就不流了。守门的狮鹫至今没收到下一道命令。</p>
+      <p class="en">The door closed. The river stopped.<br />The griffin is still waiting for orders.</p>
     </div>
 
     <div class="copy c3" id="c3">
+      <div class="tag">III · THE SUNKEN CITY</div>
       <h2>城一层压着一层，<br />压进地底。</h2>
-      <p>住得高的人，听不见下面的声音。</p>
+      <p>门够不着，人只好往下挖。城是挖出来的，一层住一代。</p>
+      <p class="en">The door was beyond reach. So they dug.<br />One age to a floor.</p>
     </div>
 
     <div class="copy c4" id="c4">
+      <div class="tag">IV · THE STONE FALL</div>
       <h2>河走到这里就不走了，<br />石头替它站着。</h2>
-      <p>城长在石头上，像一句没说完的话。</p>
+      <p>河的尽头在这里。石头替它站了几百年，等它想起自己是水。</p>
+      <p class="en">The river ends here. The stones stand in its place,<br />waiting for it to remember.</p>
     </div>
 
     <div class="copy c5" id="c5">
-      <h2 id="c5a">路还长。</h2>
-      <p id="c5b">愿风替你开门，愿你在无人处仍有火。</p>
-      <p class="sign" id="c5c">—— 生日快乐，<span class="name">名字</span></p>
+      <h2 id="c5a">路在低处。</h2>
+      <p id="c5b">门会为你开，河会为你醒。</p>
+      <p class="sign" id="c5c">—— 写给 那位从<span class="name">门外</span>来的旅人</p>
+      <p class="en" id="c5d">— FOR THE TRAVELLER FROM ELSEWHERE —</p>
     </div>
 
   </div>
@@ -359,6 +408,7 @@
   const c5a = document.getElementById('c5a');
   const c5b = document.getElementById('c5b');
   const c5c = document.getElementById('c5c');
+  const c5d = document.getElementById('c5d');
 
   const bands1 = [...scene1.querySelectorAll('.band')];
   const bands2 = [...scene2.querySelectorAll('.band')];
@@ -391,7 +441,7 @@
       const z = z0 + cam;
 
       const approach = smoothstep(180, 900, z);
-      const blur = approach * 6.5;
+      const blur = approach * 3.0;
       const dim  = 1 - approach * 0.2;
 
       const near = clamp((z0 + 1100) / 1100);
@@ -617,6 +667,8 @@
     c5b.style.transform = `translate3d(0, ${((1 - beat2) * 16).toFixed(1)}px, 0)`;
     c5c.style.opacity = beat3.toFixed(3);
     c5c.style.transform = `translate3d(0, ${((1 - beat3) * 14).toFixed(1)}px, 0)`;
+    c5d.style.opacity = (beat3 * 0.72).toFixed(3);
+    c5d.style.transform = `translate3d(0, ${((1 - beat3) * 14).toFixed(1)}px, 0)`;
 
     /* ---------- world dive, retimed for four acts ---------- */
     const diveScale = Math.min(1, Math.max(0.5,
